@@ -42,3 +42,4 @@ public class PageRank {
         return pr.get(word);
     }
 }
+
