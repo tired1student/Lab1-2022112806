@@ -80,7 +80,7 @@ public class GraphProcessor {
     }
 
     public String calcShortestPath(String word1, String word2) {
-        if (!graph.hasNode(word1) || !graph.hasNode(word2)) {
+        if (!graph.hasNode(word1) || !graph.hasNode(word2)) { // 决策点 1
             return "No word1 or word2 in the graph!";
         }
 
@@ -88,49 +88,49 @@ public class GraphProcessor {
         Map<String, String> predecessors = new HashMap<>();
         Set<String> visited = new HashSet<>();
 
-        for (String node : graph.getNodes()) {
+        for (String node : graph.getNodes()) { // 决策点 2（循环）
             distances.put(node, Double.MAX_VALUE);
         }
         distances.put(word1, 0.0);
 
-        while (!visited.containsAll(graph.getNodes())) {
+        while (!visited.containsAll(graph.getNodes())) { // 决策点 3（循环）
             String current = null;
             double currentDistance = Double.MAX_VALUE;
-            for (Map.Entry<String, Double> entry : distances.entrySet()) {
-                if (!visited.contains(entry.getKey()) && entry.getValue() < currentDistance) {
+            for (Map.Entry<String, Double> entry : distances.entrySet()) { // 决策点 4（循环）
+                if (!visited.contains(entry.getKey()) && entry.getValue() < currentDistance) { // 决策点 5
                     current = entry.getKey();
                     currentDistance = entry.getValue();
                 }
             }
 
-            if (current == null) {
+            if (current == null) { // 决策点 6
                 break;
             }
 
             visited.add(current);
 
-            for (Map.Entry<String, Integer> edge : graph.getEdgesFrom(current).entrySet()) {
+            for (Map.Entry<String, Integer> edge : graph.getEdgesFrom(current).entrySet()) { // 决策点 7（循环）
                 String neighbor = edge.getKey();
                 double weight = edge.getValue();
                 double distance = currentDistance + weight;
-                if (distance < distances.get(neighbor)) {
+                if (distance < distances.get(neighbor)) { // 决策点 8
                     distances.put(neighbor, distance);
                     predecessors.put(neighbor, current);
                 }
             }
         }
 
-        if (distances.get(word2) == Double.MAX_VALUE) {
+        if (distances.get(word2) == Double.MAX_VALUE) { // 决策点 9
             return word1 + " to " + word2 + " is unreachable.";
         }
 
         List<String> path = new ArrayList<>();
         String current = word2;
-        while (current != null && !current.equals(word1)) {
+        while (current != null && !current.equals(word1)) { // 决策点 10（循环）
             path.add(current);
             current = predecessors.get(current);
         }
-        if (current == null) {
+        if (current == null) { // 决策点 11
             return word1 + " to " + word2 + " is unreachable.";
         }
         path.add(word1);
